@@ -29,6 +29,9 @@ public:
     BTNode (T const& it=T(), BTNode<T>::Ref left=nullptr, BTNode<T>::Ref right=nullptr)
     {
         //TODO
+        item_ = it;
+        left_ = left;
+        right_ = right;
     }
 
     /**
@@ -56,35 +59,37 @@ public:
     const T& item() const
     {
         //TODO
-        return T();
+        return item_;
     }
 
     /** @brief Has it a left child?*/
     bool has_left() const
     {
         //TODO
-        return false;
+        if (left_ == nullptr) return false;
+        else return true;
     }
 
     /** @brief get the left child.*/
     BTNode<T>::Ref left() const
     {
         //TODO
-        return nullptr;
+        return left_;
     }
 
     /** @brief Has it a right child? */
     bool has_right() const
     {
         //TODO
-        return false;
+        if (right_ == nullptr) return false;
+        else return true;
     }
 
     /** @brief get the right child.*/
     BTNode<T>::Ref right() const
     {
         //TODO
-        return nullptr;
+        return right_;
     }
     /** @}*/
 
@@ -95,35 +100,42 @@ public:
     void set_item(const T& new_it)
     {
         //TODO
+        item_ = new_it;
     }
 
     /** @brief Set the left child.*/
     void set_left(BTNode<T>::Ref new_child)
     {
         //TODO
+        left_ = new_child;
     }
 
     /** @brief Remove link to the left child. */
     void remove_left()
     {
         //TODO: hint see std::share_ptr doc.
+        left_ = nullptr;
     }
 
     /** @brief Set the right child.*/
     void set_right(BTNode<T>::Ref new_child)
     {
         //TODO
+        right_ = new_child;
     }
 
     /** @brief Remove linkt to the right child. */
     void remove_right()
     {
         //TODO: hint see std::share_ptr doc.
+        right_ = nullptr;
     }
 
 protected:
     //TODO
     //Hint: use typename SNode<T>::Ref for the link to other nodes.
+    T item_;
+    BTNode<T>::Ref left_, right_;
 };
 
 /**
@@ -151,6 +163,8 @@ class BTree
     BTree ()
     {
         //TODO
+        root_ = nullptr;
+        assert(is_empty());
     }
 
   /** @brief Create Leaf BTree.
@@ -159,6 +173,7 @@ class BTree
   BTree (const T& item)
   {
       //TODO
+      root_->set_item(item);
   }
 
   /**
@@ -220,7 +235,8 @@ class BTree
   bool is_empty () const
   {
       //TODO
-      return false;
+      if (root_ == nullptr) return true;
+      else return false;
   }
 
   /** @brief Get the root item.
@@ -230,7 +246,7 @@ class BTree
   {
       assert(!is_empty());
       //TODO
-      return T();
+      return root_->item();
   }
 
   /**
@@ -244,6 +260,7 @@ class BTree
       BTree<T>::Ref l_subtree;
 
       //TODO
+      l_subtree->root_ = root_->left();
 
       //
 
@@ -261,7 +278,7 @@ class BTree
       BTree<T>::Ref r_subtree;
 
       //TODO
-
+    r_subtree->root_ = root_->right();
       //
 
       return r_subtree;
@@ -285,6 +302,14 @@ class BTree
   std::ostream& fold(std::ostream& out) const
   {
       //TODO
+      std::string cad;
+      if(is_empty()){
+          out<<"[]";
+      }
+
+      else{
+          cad = cad + "[" std::to_string(root_item_) + ""; 
+      }
 
 
       //
@@ -305,6 +330,7 @@ class BTree
   {
       assert(!is_empty());
       //TODO
+      root_->set_item(new_it);
   }
 
   /**
@@ -316,6 +342,7 @@ class BTree
   {
       //TODO
       assert(!is_empty());
+      root_ = BTNode<T>::create(item);
   }
 
   /**
@@ -326,6 +353,7 @@ class BTree
   {
       //TODO
       assert(is_empty());
+      root_ = nullptr;
   }
 
   /**
@@ -337,6 +365,10 @@ class BTree
   {
       assert(!is_empty());
       //TODO
+      root_->set_left(new_left->root_);
+    
+
+      
   }
 
   /**
@@ -347,6 +379,7 @@ class BTree
   {
       assert(!is_empty());
       //TODO
+      root_->set_left(nullptr);
   }
 
   /**
@@ -357,6 +390,7 @@ class BTree
   {
       assert(!is_empty());
       //TODO
+      root_->set_right(t->root_);
   }
 
   /**
@@ -367,6 +401,7 @@ class BTree
   {
       assert(!is_empty());
       //TODO
+      root_->set_right(nullptr);
   }
 
   /** @}*/
@@ -374,6 +409,8 @@ class BTree
 protected:
 
   //TODO
+  typename BTNode<T>::Ref root_;
+
 
 };
 #endif
