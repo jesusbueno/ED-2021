@@ -302,7 +302,7 @@ class BTree
   std::ostream& fold(std::ostream& out) const
   {
       //TODO
-      std::string cad;
+      /*std::string cad;
       if(is_empty()){
           out<<"[]";
       }
@@ -310,7 +310,7 @@ class BTree
       else{
           cad = cad + "[" std::to_string(root_item_) + ""; 
       }
-
+*/
 
       //
       return out;
