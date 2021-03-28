@@ -22,35 +22,32 @@ template<class T>
 int compute_height (typename BTree<T>::Ref t)
 {
     assert(t != nullptr);
-    int ret_val = -1;
+    int ret_val = 0;
 
     //TODO
-
-    int aux = -1;
+    int left, right;
 
     if (t->is_empty())
     {
-        aux = aux;
-        if (ret_val < aux) ret_val = aux;
+        return -1;
 
     }
-/*
     else
     {
+        left = compute_height<T>(t->left());
+        right = compute_height<T>(t->right());
 
-            aux++;
-            if (ret_val < aux) ret_val = aux;
-            compute_height<T>(t->left());
+        if(left>right){
+            ret_val = left+1;
+            return ret_val;
+        }
 
-            aux++;
-            if (ret_val < aux) ret_val = aux;
-            compute_height<T>(t->right());
-
-
+        else{
+            ret_val = right+1;
+            return ret_val;
+        }
     }
-*/
 
-    return ret_val;
 
 }
 
@@ -70,7 +67,6 @@ size_t compute_size (typename BTree<T>::Ref t)
     size_t ret_val = 0;
     typename BTree<T>::Ref l_tree;
     typename BTree<T>::Ref r_tree;
-    //r_tree->BTree<T>::right();
 
 
     //TODO
