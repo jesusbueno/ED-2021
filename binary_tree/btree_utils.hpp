@@ -26,7 +26,32 @@ int compute_height (typename BTree<T>::Ref t)
 
     //TODO
 
+    int aux = -1;
+
+    if (t->is_empty())
+    {
+        aux = aux;
+        if (ret_val < aux) ret_val = aux;
+
+    }
+/*
+    else
+    {
+
+            aux++;
+            if (ret_val < aux) ret_val = aux;
+            compute_height<T>(t->left());
+
+            aux++;
+            if (ret_val < aux) ret_val = aux;
+            compute_height<T>(t->right());
+
+
+    }
+*/
+
     return ret_val;
+
 }
 
 /**
@@ -43,9 +68,27 @@ size_t compute_size (typename BTree<T>::Ref t)
 {
     assert(t != nullptr);
     size_t ret_val = 0;
+    typename BTree<T>::Ref l_tree;
+    typename BTree<T>::Ref r_tree;
+    //r_tree->BTree<T>::right();
 
 
     //TODO
+    if(t->is_empty()){ return 0; }
+
+    else{
+        l_tree = t->left();
+        r_tree = t->right();
+        ret_val++;
+
+        if(!l_tree->is_empty()){
+            ret_val = ret_val + compute_size<T>(l_tree);
+        }
+
+        if(!r_tree->is_empty()){
+            ret_val = ret_val + compute_size<T>(r_tree);
+        }
+    }
 
     assert(!t->is_empty() || ret_val==0);
     assert(t->is_empty() || ret_val>0);
@@ -75,7 +118,7 @@ prefix_process(typename BTree<T>::Ref tree, Processor& p)
 
     //TODO
 
-    return retVal;
+
 }
 
 /**

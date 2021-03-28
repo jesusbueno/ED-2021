@@ -46,28 +46,7 @@ public:
         return std::make_shared<BTNode<T>> (it, left, right);
     }
 
-     std::ostream& fold(std::ostream& out, BTNode<T>::Ref next) const{
-
-    	if (next == nullptr)
-    	{
-    		out<<"[]";
-
-    	}else{
-
-    		out<<"[ ";
-    		out<<next->item_;
-    		out<<' ';
-
-
-    		fold(out, next->left_);
-    		out<<' ';
-    		fold(out, next->right_);
-    		out<<" ]";
-
-    	}
-
-    	return out;
-    }
+    
 
     /** @brief Destroy a BTNode. **/
     ~BTNode()
@@ -313,15 +292,18 @@ class BTree
   typename BTree<T>::Ref left() const
   {
       assert(!is_empty());
-      BTree<T>::Ref l_subtree;
+      //BTree<T>::Ref l_subtree;
+      auto l_subtree = BTree<T>::create();
 
 
       //TODO
-      l_subtree->root_ = root_->left();
-
+ 
+          l_subtree->root_ = root_->left();
+          return l_subtree;
+      
       //
 
-      return l_subtree;
+      
   }
 
   /**
@@ -332,13 +314,15 @@ class BTree
   typename BTree<T>::Ref right() const
   {
       assert(!is_empty());
-      BTree<T>::Ref r_subtree;
+      //BTree<T>::Ref r_subtree;
+      auto r_subtree = BTree<T>::create();
 
       //TODO
-    r_subtree->root_ = root_->right();
-      //
 
-      return r_subtree;
+          r_subtree->root_ = root_->right();
+          return r_subtree;
+  
+      //
   }
 
   /**
@@ -366,17 +350,13 @@ class BTree
           out<<"[ ";
           out<< root_->item();
           out<<" ";
+          auto l_tree = BTree<T>::left();
+          auto r_tree = BTree<T>::right();
 
-          if(left() != nullptr){
-              left()->fold(out);
-          }else{
-              out << "[]";
-          }
-          
+          l_tree->fold(out); 
           out<<" ";
-          right()->fold(out);
+          r_tree->fold(out);
           out<<" ]";
-
       }
   }
 

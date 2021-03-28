@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "/home/jesus/ED/2021/i82buruj/binary_tree/build/test_btree",
-            "args": ["tests_btree/01"],
+            "args": ["tests_btree/05"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
