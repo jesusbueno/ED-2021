@@ -46,6 +46,29 @@ public:
         return std::make_shared<BTNode<T>> (it, left, right);
     }
 
+     std::ostream& fold(std::ostream& out, BTNode<T>::Ref next) const{
+
+    	if (next == nullptr)
+    	{
+    		out<<"[]";
+
+    	}else{
+
+    		out<<"[ ";
+    		out<<next->item_;
+    		out<<' ';
+
+
+    		fold(out, next->left_);
+    		out<<' ';
+    		fold(out, next->right_);
+    		out<<" ]";
+
+    	}
+
+    	return out;
+    }
+
     /** @brief Destroy a BTNode. **/
     ~BTNode()
     {}
@@ -173,7 +196,7 @@ class BTree
   BTree (const T& item)
   {
       //TODO
-      root_->set_item(item);
+      root_ = BTNode<T>::create(item);
   }
 
   /**
@@ -210,16 +233,49 @@ class BTree
    */
   static typename BTree<T>::Ref create (std::istream& in) noexcept(false)
   {
-      auto tree = BTree<T>::create();
       std::string token;
       in >> token;
+
+      auto tree = BTree<T>::create();
+
       if (!in)
-          throw std::runtime_error("Wrong input format.");
+      {
+              throw std::runtime_error("Wrong input format.");
+      }
 
       //TODO
 
-      return tree;
-  }
+      char aux;
+      T item;
+      
+      if (token == "[]") { 
+        return tree;
+      }
+
+        if (!in){ throw std::runtime_error("Wrong input format.");}
+
+        in>>token;
+        std::istringstream translater(token);
+
+
+        
+        translater >> item;
+        tree->create_root(item);
+
+        if (!in){ throw std::runtime_error("Wrong input format."); }
+
+        auto left_tree = BTree<T>::create(in);
+        tree->set_left(left_tree);
+
+        auto right_tree = BTree<T>::create(in);
+        tree->set_right(right_tree);
+
+
+        in>>aux;
+        return tree;
+
+      }
+
 
   /** @brief Destroy a BTree.**/
   ~BTree()
@@ -258,6 +314,7 @@ class BTree
   {
       assert(!is_empty());
       BTree<T>::Ref l_subtree;
+
 
       //TODO
       l_subtree->root_ = root_->left();
@@ -301,19 +358,26 @@ class BTree
    */
   std::ostream& fold(std::ostream& out) const
   {
-      //TODO
-      /*std::string cad;
-      if(is_empty()){
-          out<<"[]";
-      }
+
+      if(is_empty()){ out << "[]";}
 
       else{
-          cad = cad + "[" std::to_string(root_item_) + ""; 
-      }
-*/
 
-      //
-      return out;
+          out<<"[ ";
+          out<< root_->item();
+          out<<" ";
+
+          if(left() != nullptr){
+              left()->fold(out);
+          }else{
+              out << "[]";
+          }
+          
+          out<<" ";
+          right()->fold(out);
+          out<<" ]";
+
+      }
   }
 
   /** @}*/
@@ -341,8 +405,9 @@ class BTree
   void create_root(T const& item)
   {
       //TODO
-      assert(!is_empty());
+      
       root_ = BTNode<T>::create(item);
+      assert(!is_empty());
   }
 
   /**
