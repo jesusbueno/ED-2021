@@ -1,3 +1,0 @@
-/home/jesus/ED/2021/i82buruj/binary_tree/build/CMakeFiles/rebuild_cache.dir
-/home/jesus/ED/2021/i82buruj/binary_tree/build/CMakeFiles/test_btree.dir
-/home/jesus/ED/2021/i82buruj/binary_tree/build/CMakeFiles/edit_cache.dir
