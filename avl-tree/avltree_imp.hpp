@@ -30,6 +30,12 @@ AVLTNode<T>::AVLTNode (T const& it, AVLTNode<T>::Ref parent,
     item_(it), parent_(parent), left_(left), right_(right), height_(0)
 {
     //TODO
+    item_ = it;
+    parent_ = parent;
+    left_ = left;
+    right_ = right;
+    height_ = 0;
+
 
     //
     assert(check_height_invariant());
@@ -48,14 +54,14 @@ template <class T>
 const T& AVLTNode<T>::item() const
 {
     //TODO
-    return T();
+    return item_;
 }
 
 template <class T>
 int AVLTNode<T>::height() const
 {
     //TODO
-    return -1;
+    return height_;
 }
 
 template <class T>
@@ -63,7 +69,7 @@ int AVLTNode<T>::balance_factor() const
 {
     int bf = 0;
     //TODO
-
+    bf = left_->height() - right_->height();
     //
     return bf;
 }
@@ -72,42 +78,48 @@ template <class T>
 bool AVLTNode<T>::has_parent() const
 {
     //TODO
-    return false;
+    if (parent_ == nullptr) return false;
+
+    else return true;
 }
 
 template <class T>
 typename AVLTNode<T>::Ref AVLTNode<T>::parent() const
 {
     //TODO
-    return nullptr;
+    return parent_;
 }
 
 template <class T>
 bool AVLTNode<T>::has_left() const
 {
     //TODO
-    return false;
+    if(left_ == nullptr) return false;
+
+    else return true;
 }
 
 template <class T>
 typename AVLTNode<T>::Ref AVLTNode<T>::left() const
 {
     //TODO
-    return nullptr;
+    return left_;
 }
 
 template <class T>
 bool AVLTNode<T>::has_right() const
 {
     //TODO
-    return false;
+    if(right_ == nullptr) return false;
+
+    else return true;
 }
 
 template <class T>
 typename AVLTNode<T>::Ref AVLTNode<T>::right() const
 {
     //TODO
-    return nullptr;
+    return right_;
 }
 
 template <class T>
@@ -115,6 +127,21 @@ bool AVLTNode<T>::check_height_invariant () const
 {
     bool ret_val = false;
     //TODO
+    T aux = INT_MIN;
+
+    if (!has_left() && !has_right()) aux = -1;
+
+    if(has_left() && left_->height() > aux){
+        aux = left_->height();
+
+        if( height_ == aux + 1) return true;
+    }
+
+    if(has_right() && right_ > aux){
+        aux = right_->height();
+
+        if( height_ == aux + 1) return true;
+    }
 
     //
     return ret_val;
@@ -124,7 +151,7 @@ template <class T>
 void AVLTNode<T>::set_item(const T& new_it)
 {
     //TODO
-
+    item_ = new_it;
     //
     assert(item()==new_it);
 }
@@ -133,7 +160,7 @@ template <class T>
 void AVLTNode<T>::set_parent(AVLTNode<T>::Ref const& new_parent)
 {
     //TODO
-
+    parent_ = new_parent;
     //
     assert(parent()==new_parent);
 }
@@ -142,7 +169,7 @@ template <class T>
 void AVLTNode<T>::remove_parent()
 {
     //TODO
-
+    parent_ = nullptr;
     //
     assert(!has_parent());
 }
@@ -151,7 +178,7 @@ template <class T>
 void AVLTNode<T>::set_left(AVLTNode<T>::Ref const& new_child)
 {
     //TODO
-
+    left_ = new_child;
     //
     assert(check_height_invariant());
     assert(left()==new_child);
@@ -161,7 +188,7 @@ template <class T>
 void AVLTNode<T>::remove_left()
 {
     //TODO
-
+    left_ = nullptr;
     //
     assert(check_height_invariant());
     assert(!has_left());
@@ -171,7 +198,7 @@ template <class T>
 void AVLTNode<T>::set_right(AVLTNode<T>::Ref const& new_child)
 {
     //TODO
-
+    right_ = new_child;
     //
     assert(check_height_invariant());
     assert(right()==new_child);
@@ -181,7 +208,7 @@ template <class T>
 void AVLTNode<T>::remove_right()
 {
     //TODO
-
+    right_ = nullptr;
     //
     assert(check_height_invariant());
     assert(!has_right());
@@ -191,7 +218,15 @@ template <class T>
 void AVLTNode<T>::compute_height()
 {
     //TODO
+    T aux = INT_MIN;
 
+    if(!has_left() && !has_right()) aux = -1;
+
+    if(has_left() && left_->height() > aux) aux = left_->height();
+
+    if(has_right() && right_->height() > aux) aux = right_->height();
+    
+    height_ = aux + 1;
     //
     assert(check_height_invariant());
 }
@@ -204,7 +239,7 @@ template <class T>
 AVLTree<T>::AVLTree ()
 {
     //TODO
-
+    root_ = nullptr;
     //
     assert(is_a_binary_search_tree());
     assert(is_a_balanced_tree());
@@ -214,8 +249,9 @@ template <class T>
 AVLTree<T>::AVLTree (T const& item)
 {
     //TODO
-
     //
+    root_->set_item(item);
+
     assert(is_a_binary_search_tree());
     assert(is_a_balanced_tree());
 }
@@ -293,13 +329,14 @@ template <class T>
 bool AVLTree<T>::is_empty () const
 {
     //TODO
-    return false;
+    if(root_ == nullptr) return true;
+    else return false;
 }
 
 template <class T>
 T const& AVLTree<T>::item() const
 {
-    return T();
+    return root_->item();
 }
 
 template <class T>
@@ -315,7 +352,9 @@ template <class T>
 bool AVLTree<T>::current_exists() const
 {
     //TODO
-    return false;
+    if(current_ != nullptr) return true;
+
+    else return false;
 }
 
 template <class T>
@@ -323,7 +362,7 @@ T const& AVLTree<T>::current() const
 {
     assert(current_exists());
     //TODO    
-    return T();
+    return current_;
 }
 
 template <class T>
@@ -342,7 +381,9 @@ typename AVLTree<T>::Ref AVLTree<T>::left() const
 {
     assert(!is_empty());
     //TODO
-    return nullptr;
+    AVLTree<T>::Ref l_tree = AVLTree<T>::create();
+    l_tree->root_ = root_->left();
+    return l_tree;
 }
 
 template <class T>
@@ -350,7 +391,9 @@ typename AVLTree<T>::Ref AVLTree<T>::right() const
 {
     assert(!is_empty());
     //TODO
-    return nullptr;
+    AVLTree<T>::Ref r_tree = AVLTree<T>::create();
+    r_tree->root_ = root_->right();
+    return r_tree;
 }
 
 template <class T>
@@ -368,9 +411,10 @@ int AVLTree<T>::height() const
 {
     int h = -1;
     //TODO
-
+    if( is_empty() ) return h;
+    else return root_->height();
     //
-    return h;
+    
 }
 
 template <class T>

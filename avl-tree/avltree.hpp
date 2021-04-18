@@ -448,7 +448,8 @@ protected:
 
   //TODO
   //Chose a representation for this TAD.
-
+  AVLTNode<T>::Ref root_;
+  AVLTNode<T>::Ref current_;
 
   //
 
