@@ -302,7 +302,7 @@ typename AVLTree<T>::Ref AVLTree<T>::create(std::istream& in) noexcept(false)
 
 
         in>>aux;
-        return tree;
+        //return tree;
 
 
     //
@@ -375,10 +375,10 @@ std::ostream& AVLTree<T>::fold(std::ostream& out) const
       else{
 
           out<<"[ ";
-          out<< root_->item();
+          out<< item();
           out<<" ";
-          auto l_tree = AVLTree<T>::left();
-          auto r_tree = AVLTree<T>::right();
+          auto l_tree = left();
+          auto r_tree = right();
 
           l_tree->fold(out); 
           out<<" ";
@@ -485,8 +485,10 @@ bool AVLTree<T>::has(const T& k) const
 #endif
   //TODO
   bool found = false;
-  bool end = false;
-  typename AVLTNode<T>::Ref cursor = root_;
+  /*bool end = false;
+  typename AVLTNode<T>::Ref cursor;
+  cursor = root_;
+  if(is_empty()) return false;
 
   do{
       if(cursor->item() == k){
@@ -506,6 +508,21 @@ bool AVLTree<T>::has(const T& k) const
       }
   }while((found==false)&&(end==false));
 
+*/
+
+    if(!is_empty()){
+        if(k < item() ){
+            found = left()->has(k);
+        }
+
+        else if( k > item() ){
+            found = right()->has(k);
+        }
+
+        else{
+            found = true;
+        }
+    }
   //
 #ifndef NDEBUG
   assert (!old_current_exists || old_current == current());
@@ -567,8 +584,34 @@ bool AVLTree<T>::is_a_balanced_tree() const
 #else
     bool is_balanced = true;
     //TODO
+    /*if(is_empty()) return true;
 
+    else{
+        int bf = root_->balance_factor();
 
+        if(bf >= 2 || bf <= -2){
+            return false;
+        }
+
+        if( root_->has_right()==false && root_->has_left() == false){
+            return true;
+        }
+        else{
+
+            bool r_bf=true, l_bf=true;
+            if(root_->has_left()){
+                l_bf = left()->is_a_balanced_tree();
+            }
+
+            if(root_->has_right()){
+                r_bf = right()->is_a_balanced_tree();
+            }
+
+            if(r_bf ==false || l_bf==false) return false;
+            else return true;
+        }
+    }
+*/
     //
     return is_balanced;
 #endif
@@ -592,25 +635,26 @@ template <class T>
 bool AVLTree<T>::search(T const& k)
 {
     bool found = false;
-    bool limit = false;
-    //TODO
-    current_ = root_;
-    do{
-        if(current() == k) found = true;
-        else if((current_->has_left()) && (current() > k)){
-            current_ = current_->left();
-        }
 
-        else if((current_->has_right())&&(current() < k)){
-            current_ = current_->right();
-        }
+   current_ = root_;
+   parent_ = nullptr;
 
-        else limit = true;
-    }while( (found==false) && (limit==false) );
+   while(current_ != nullptr && found == false){
+       if(current_->item() == k){
+           found = true;
+       }
 
-    if(limit==true && found==false){
-        current_ = nullptr;
-    }
+       else{
+           parent_ = current_;
+           if(current_->item() > k){
+               current_ = current_->left();
+           }
+
+           else{
+               current_ = current_->right();
+           }
+       }
+   }
     //
     assert(!found || current()==k);
     assert(found || !current_exists());
@@ -634,7 +678,7 @@ void AVLTree<T>::insert(T const& k)
         assert(is_a_balanced_tree());
 #endif
     }
-
+/*
     //check postconditions.
     if (is_empty()){
         auto new_node = AVLTNode<T>::create(k);
@@ -680,8 +724,24 @@ void AVLTree<T>::insert(T const& k)
             }
         }while(aux == false);
     }
+    */
+    
+    if(is_empty()){
+        current_ = AVLTNode<T>::create(k);
+        root_ = current_;
+    }
 
-    //make_balanced();
+    else if(!search(k)){
+        current_ = AVLTNode<T>::create(k);
+
+        if(parent_->item() > k){
+            parent_->set_left(current_);
+        }
+
+        else{
+            parent_->set_right(current_);
+        }
+    }
     
     assert(current_exists());
     assert(current()==k);
@@ -693,7 +753,7 @@ void AVLTree<T>::remove ()
     //check preconditions.
     assert(current_exists());
 
-    bool replace_with_subtree = true;
+    bool ReplaceWithSubTree = true;
     typename AVLTNode<T>::Ref subtree;
 
     //TODO
@@ -701,35 +761,8 @@ void AVLTree<T>::remove ()
 
 
     //
-
-    if (replace_with_subtree)
-    {
-        //TODO
-        //Manage cases 0,1,2
-
-
-
-        //
-#ifdef __ONLY_BSTREE__
-        assert(is_a_binary_search_tree());
-        assert( current_exists());
-#else
-        assert(is_a_binary_search_tree());
-        make_balanced();
-        assert(is_a_balanced_tree());
-        assert(! current_exists());
-#endif
-    }
-    else
-    {
-        //TODO
-        //Manage case 3.
-        bool ReplaceWithSubTree = true;
-        typename AVLTNode<T>::Ref subtree;
-        
-
-        if( (!current_->has_left() && (!current_->has_right())) ){
-            current_ = subtree;
+    if( (!current_->has_left() && (!current_->has_right())) ){
+            subtree = nullptr;
         }
 
         else if(!current_->has_right()){
@@ -743,33 +776,46 @@ void AVLTree<T>::remove ()
         else{
             ReplaceWithSubTree = false;
         }
-
-        if(ReplaceWithSubTree){
+   
+    if (ReplaceWithSubTree)
+    {
+        //TODO
+        //Manage cases 0,1,2
             if(current_->parent() == nullptr){
                 root_ = subtree;
                 current_ = nullptr;
             }
 
-            else{
-                parent_ = current_->parent();
-                if(parent_->right()->item() == current()){
-                    parent_->set_right(subtree);
-                    current_ = nullptr;
-                }
-
-                else{
-                    parent_ -> set_left(subtree);
-                    current_ = nullptr;
-                }
+            else if(current_->parent()->right() == current_){
+                parent_->set_right(subtree);
+                current_ = nullptr;
             }
-        }
 
-        else{
+            else{
+                parent_ -> set_left(subtree);
+                current_ = nullptr;
+            }
+
+
+        //
+#ifdef __ONLY_BSTREE__
+        assert(is_a_binary_search_tree());
+        assert(!current_exists());
+#else
+        assert(is_a_binary_search_tree());
+        make_balanced();
+        assert(is_a_balanced_tree());
+        assert(! current_exists());
+#endif
+    }
+    else
+    {
+        //TODO
+        //Manage case 3.
             auto tmp = current_;
             find_inorder_sucessor();
             tmp->set_item(current_->item());
             remove();
-        }
         //
     }
 }
