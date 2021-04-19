@@ -3,6 +3,7 @@ project (avl_tree)
 
 enable_language(CXX)
 set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_FLAGS "-g")
 
 add_executable(test_avltnode test_avltree.cpp avltree.hpp avltree_imp.hpp)
 target_compile_definitions(test_avltnode PRIVATE "-D__ONLY_BSTREE__")

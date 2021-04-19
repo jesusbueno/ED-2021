@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/jesus/ED/2021/i82buruj/avl-tree/avltree.hpp
+cassert
+-
+exception
+-
+functional
+-
+memory
+-
+iostream
+-
+algorithm
+-
+functional
+-
+vector
+-
+
+/home/jesus/ED/2021/i82buruj/avl-tree/avltree_imp.hpp
+avltree.hpp
+/home/jesus/ED/2021/i82buruj/avl-tree/avltree.hpp
+
+/home/jesus/ED/2021/i82buruj/avl-tree/test_avltree.cpp
+iostream
+-
+fstream
+-
+sstream
+-
+exception
+-
+vector
+-
+valarray
+-
+avltree_imp.hpp
+/home/jesus/ED/2021/i82buruj/avl-tree/avltree_imp.hpp
+
