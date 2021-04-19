@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "/home/jesus/ED/2021/i82buruj/avl-tree/build/test_bstree",
-            "args": ["tests_bstree/05"],
+            "args": ["tests_bstree/04"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
