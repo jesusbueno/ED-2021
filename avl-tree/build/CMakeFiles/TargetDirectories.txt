@@ -1,5 +1,0 @@
-/home/jesus/ED/2021/i82buruj/avl-tree/build/CMakeFiles/rebuild_cache.dir
-/home/jesus/ED/2021/i82buruj/avl-tree/build/CMakeFiles/edit_cache.dir
-/home/jesus/ED/2021/i82buruj/avl-tree/build/CMakeFiles/test_avltree.dir
-/home/jesus/ED/2021/i82buruj/avl-tree/build/CMakeFiles/test_avltnode.dir
-/home/jesus/ED/2021/i82buruj/avl-tree/build/CMakeFiles/test_bstree.dir
