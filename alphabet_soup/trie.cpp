@@ -46,8 +46,13 @@ TrieNode::child(char k) const
 {
     assert(has(k));
     TrieNode::Ref ret_v;
-    //TODO
 
+    //TODO
+    for(auto i = children_.begin(); i != children_.end(); i++){
+        if(i->first == k){
+            ret_v = i->second;
+        }
+    }
     //
     return ret_v;
 }
@@ -73,7 +78,7 @@ void
 TrieNode::insert(char k, Ref node)
 {
     //TODO
-
+    children_.insert(std::pair<char,Ref>(k, node));
     //
 }
 
