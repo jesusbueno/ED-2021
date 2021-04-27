@@ -35,6 +35,7 @@ TrieNode::has(char k) const
 {
     bool ret_v = false;
     //TODO
+    if( children_.find(k) != children_.end()) ret_v = true;
 
     //
     return ret_v;
@@ -90,7 +91,7 @@ Trie::Ref Trie::create()
 TrieNode::Ref Trie::root() const
 {
     //TODO
-    return nullptr;
+    return root_;
     //
 }
 
@@ -100,7 +101,10 @@ Trie::has(std::string const& k) const
     bool found = false;
     //TODO
     //Remember: The Trie can have a prefix==k but does not store the key k.
+    auto aux = TrieNode::create();
 
+    aux = find_node(k);
+    found = (aux != nullptr) and (aux->value() == k);
     //
     return found;
 }
@@ -120,8 +124,25 @@ void
 Trie::insert(std::string const& k)
 {
     //TODO
+    if (root_ == nullptr){
+        root_ = TrieNode::create();
+    }
 
+    auto node = root_;
 
+    for(int i = 0; i< k.size(); i++){
+        if(node->has(k[i])){
+            node = node->child(k[i]);
+        }
+
+        else{
+            auto newNode = TrieNode::create();
+            node->insert(k[i], newNode);
+            node = newNode;
+        }   
+    }
+
+    node->set_value(k);
 
     //
     assert(has(k));
@@ -132,8 +153,18 @@ Trie::find_node(std::string const& pref) const
 {
     TrieNode::Ref node;
     //TODO
+    auto node = root_;
+    int i = 0;
+    while(i<pref.size() and node != nullptr){
+        if(node->has(pref[i])){
+            node = node->child(pref[i]);
+            i++;
+        }
 
-
+        else{
+            node = nullptr;
+        }
+    }
 
     //
     return node;
@@ -144,7 +175,15 @@ Trie::preorder_traversal(TrieNode::Ref const& node,
                          std::vector<std::string> & keys) const
 {
     //TODO
+    char aux;
 
+    if(node->value() == ""){
+        keys.push_back(node->value());
+    }
+
+    for(aux In node->children()){
+        preorder_traversal(node->child(aux), keys);
+    }
 
     //
 }
