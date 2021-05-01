@@ -119,7 +119,8 @@ Trie::keys(std::string const& pref) const
 {
     std::vector<std::string> keys;
     //TODO
-
+      auto node = find_node(pref);
+      if (node != nullptr) preorder_traversal(node, keys);
     //
     return keys;
 }
@@ -135,7 +136,7 @@ Trie::insert(std::string const& k)
 
     auto node = root_;
 
-    for(int i = 0; i< k.size(); i++){
+    for(unsigned i = 0; i< k.length(); i++){
         if(node->has(k[i])){
             node = node->child(k[i]);
         }
@@ -158,9 +159,9 @@ Trie::find_node(std::string const& pref) const
 {
     TrieNode::Ref node;
     //TODO
-    auto node = root_;
-    int i = 0;
-    while(i<pref.size() and node != nullptr){
+    node = root_;
+    unsigned int i = 0;
+    while(i<pref.length() && node != nullptr){
         if(node->has(pref[i])){
             node = node->child(pref[i]);
             i++;
@@ -180,14 +181,14 @@ Trie::preorder_traversal(TrieNode::Ref const& node,
                          std::vector<std::string> & keys) const
 {
     //TODO
-    char aux;
+    //char aux;
 
-    if(node->value() == ""){
+    if(node->value() != ""){
         keys.push_back(node->value());
     }
 
-    for(aux In node->children()){
-        preorder_traversal(node->child(aux), keys);
+    for(std::map<char, std::shared_ptr<TrieNode>>::const_iterator i = node->children().begin(); i != node->children().end(); i++){
+        preorder_traversal(i->second, keys);
     }
 
     //

@@ -1,0 +1,4 @@
+/home/jesus/ED/2021/i82buruj/alphabet_soup/build/CMakeFiles/rebuild_cache.dir
+/home/jesus/ED/2021/i82buruj/alphabet_soup/build/CMakeFiles/edit_cache.dir
+/home/jesus/ED/2021/i82buruj/alphabet_soup/build/CMakeFiles/test_trie.dir
+/home/jesus/ED/2021/i82buruj/alphabet_soup/build/CMakeFiles/test_alphabet_soup_solver.dir

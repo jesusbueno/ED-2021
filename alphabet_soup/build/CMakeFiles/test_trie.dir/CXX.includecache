@@ -1,0 +1,40 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/jesus/ED/2021/i82buruj/alphabet_soup/test_trie.cpp
+iostream
+-
+fstream
+-
+vector
+-
+exception
+-
+string
+-
+algorithm
+-
+trie.hpp
+/home/jesus/ED/2021/i82buruj/alphabet_soup/trie.hpp
+
+/home/jesus/ED/2021/i82buruj/alphabet_soup/trie.cpp
+cassert
+-
+trie.hpp
+/home/jesus/ED/2021/i82buruj/alphabet_soup/trie.hpp
+
+/home/jesus/ED/2021/i82buruj/alphabet_soup/trie.hpp
+memory
+-
+string
+-
+vector
+-
+map
+-
+
