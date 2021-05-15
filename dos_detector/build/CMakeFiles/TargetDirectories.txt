@@ -1,0 +1,4 @@
+/home/jesus/ED/2021/i82buruj/dos_detector/build/CMakeFiles/rebuild_cache.dir
+/home/jesus/ED/2021/i82buruj/dos_detector/build/CMakeFiles/edit_cache.dir
+/home/jesus/ED/2021/i82buruj/dos_detector/build/CMakeFiles/test_hash_table.dir
+/home/jesus/ED/2021/i82buruj/dos_detector/build/CMakeFiles/test_dos_detector.dir

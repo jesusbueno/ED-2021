@@ -33,6 +33,14 @@ public:
               keyToInt key_to_int=keyToInt())
     {
         //TODO
+        dim_ = m;
+        a_ = a;
+        b_ = b;
+        p_ = p;
+        key_ = key_to_int;
+
+        table_.resize(dim_);
+        index_ = 0;
 
         assert(is_empty());
         assert(!is_valid());
@@ -49,6 +57,10 @@ public:
     bool is_empty()
     {
         //TODO
+        for(size_t i = 0; i< table_.size(); i++){
+            if(!table_[i].empty()) return false;
+        }
+
         return true;
     }
 
@@ -59,7 +71,8 @@ public:
     bool is_valid() const
     {
         //TODO
-        return false;
+        if( index_ < dim_ && !table_[index_].empty() ) return true;
+        else return false;
     }
 
     /**
@@ -69,7 +82,13 @@ public:
     size_t num_of_valid_keys() const
     {
         //TODO
-        return 0;
+        size_t cont = 0;
+
+        for(size_t i = 0; i < table_.size(); i++){
+            cont = cont + table_[i].size();
+        }
+
+        return cont;
     }
 
     /**
@@ -79,7 +98,8 @@ public:
     float load_factor() const
     {
         //TODO
-        return -1.0;
+        size_t cont = num_of_valid_keys();
+        return (float) cont / dim_;
     }
 
     /**
@@ -93,7 +113,19 @@ public:
         //TODO
         //You can use find() but
         //you must remenber to restore the cursor at the end.
-        return false;
+        bool res = false;
+
+        auto has_key = hash(key_(k));
+        if(table_[has_key].empty()) return res;
+
+        for(auto i = table_[has_key].begin(); i != table_[has_key].end(); i++ ){
+            if( i->first == k){
+                res = true;
+                break;
+            }
+        }
+
+        return res;
     }
 
 
@@ -105,7 +137,7 @@ public:
     {
         assert(is_valid());
         //TODO
-        return K();
+        return itr_->first;
     }
 
     /**
@@ -116,7 +148,7 @@ public:
     {
         assert(is_valid());
         //TODO
-        return V();
+        return itr_->second;
     }
 
     /**
@@ -127,7 +159,7 @@ public:
     hash(uint64_t k) const
     {
         //TODO
-        return 0;
+        return (((k*a_ + b_) % p_) % dim_);
     }
 
     /** @}*/
@@ -150,6 +182,16 @@ public:
         //2.1 yes, not found
         //2.2 else find into the chain (list) of the entry.
         // !!Remenber to update the cursor state.
+
+        index_ = hash(key_(k));
+        if(table_[index_].empty()) return is_found;
+
+        for(itr_ = table_[index_].begin(); itr_ != table_[index_].end(); itr_++){
+            if(itr_->first == k){
+                is_found = true;
+                break;
+            }
+        }
 
         return is_found;
     }
@@ -174,6 +216,22 @@ public:
         //2.2 else, add the new pair (key,value) to the entry chain.
         //Remenber to update the cursor state and the valid keys counter.
 
+        if(find(k)){
+            itr_->second++;
+        }
+
+        else{
+            index_ = hash(key_(k));
+            table_[index_].push_front(std::make_pair(k, v));
+            itr_ = table_[index_].begin();
+        }
+
+        if(load_factor() > 0.9){
+            rehash();
+        }
+
+
+
         assert(is_valid());
         assert(get_key()==k);
         assert(get_value()==v);
@@ -196,14 +254,15 @@ public:
 
         //TODO
         //First save the current cursor state.
-
+        auto aux_index = index_;
+        auto aux_itr = itr_;
         //
 
         goto_next(); //move the cursor to next position.
           
         //TODO
         //Second, remove the old cursor position.
-
+        table_[aux_index].erase(aux_itr);
         //
         
         assert( (num_of_valid_keys()+1)==old_n_valid_keys );
@@ -217,6 +276,7 @@ public:
     {
         assert(is_valid());
         //TODO
+        itr_->second = v;
     }
 
     /**
@@ -237,14 +297,14 @@ public:
         }
 #endif
         //1. Save the state of the cursor.
-
+        auto aux_key = get_key();
         //2. Pick up at random a new h.
-        uint64_t P = /*TODO use here the coefficiente P used for the hash function.*/ 0;
+        uint64_t P = p_;/*TODO use here the coefficiente P used for the hash function.*/
         const uint64_t a = 1 + static_cast<uint64_t>(std::rand()/(RAND_MAX+1.0) * static_cast<double>(P-1));
         const uint64_t b = static_cast<uint64_t>(std::rand()/(RAND_MAX+1.0) * static_cast<double>(P));
 
         //3. Create a new table with double size with the new hash.
-        size_t M = /*TODO use the current table size.*/ 0;
+        size_t M = dim_;/*TODO use the current table size.*/
         HashTable<K, V, keyToInt> new_table (M*2, a, b);
 
         //TODO
@@ -253,7 +313,12 @@ public:
         //4.2 while isValid() do
         //4.3    insert in new table current pair key,value
         //4.4    goto next entry.
+        goto_begin();
 
+        while(is_valid()){
+            new_table.insert(get_key(), get_value());
+            goto_next();
+        }
 
         //TODO
         //5 commute the new_table with this.
@@ -266,7 +331,7 @@ public:
         //6. Before returning, the cursor must be restored
         //to the same state that old state.
         //
-
+        find(aux_key);
 
         //post condition
         assert(!old_is_valid || (is_valid() && old_key==get_key() && old_value==get_value()));
@@ -279,6 +344,11 @@ public:
     void goto_begin()
     {
         //TODO
+        for(index_ = 0; index_ < table_.size(); index_++){
+            if(is_valid()) break;
+        }
+
+        itr_ = table_[index_].begin();
         assert(is_empty() || is_valid());
     }
 
@@ -290,6 +360,15 @@ public:
     {
         assert(is_valid());
         //TODO
+
+        if(++itr_ == table_[index_].end()){
+            index_++;
+            while(!is_valid() && index_ < dim_){
+                index_++;
+            }
+
+            itr_ = table_[index_].begin();
+        }
     }
     /** @} */
 
@@ -300,6 +379,13 @@ protected:
     //It is recommended to use types that not imply to overload
     //the assign operator used in the rehash method.
 
+    std::vector< std::list<std::pair< K, V> > > table_;
+    size_t index_;
+    typename std::list<std::pair<K, V>>::iterator itr_;
+
+    size_t dim_;
+    uint64_t a_, b_, p_;
+    keyToInt key_;
 };
 
 #endif
